@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-class HomePage extends StatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
+class PhoneOTPVerification extends StatefulWidget {
+  const PhoneOTPVerification({Key? key}) : super(key: key);
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  State<PhoneOTPVerification> createState() => _PhoneOTPVerificationState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _PhoneOTPVerificationState extends State<PhoneOTPVerification> {
   TextEditingController phoneNumber = TextEditingController();
   TextEditingController otp = TextEditingController();
-  bool canShow = false;
+  bool visible = false;
   var temp;
 
   @override
@@ -25,7 +25,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Firebase Phone Auth"),
+        title: Text("Firebase Phone OTP Authentication"),
       ),
       body: SizedBox(
         width: MediaQuery.of(context).size.width,
@@ -33,10 +33,10 @@ class _HomePageState extends State<HomePage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             buildTextField("PhNo", phoneNumber, Icons.phone, context),
-            canShow
+            visible
                 ? buildTextField("OTP", otp, Icons.timer, context)
-                : const SizedBox(),
-            !canShow ? buildSendOTPBtn("Send OTP") : buildSubmitBtn("Submit"),
+                : SizedBox(),
+            !visible ? buildSendOTPBtn("Send OTP") : buildSubmitBtn("Submit"),
           ],
         ),
       ),
@@ -46,7 +46,7 @@ class _HomePageState extends State<HomePage> {
   Widget buildSendOTPBtn(String text) => ElevatedButton(
     onPressed: () async {
       setState(() {
-        canShow = !canShow;
+        visible = !visible;
       });
       temp = await FirebaseAuthentication().sendOTP(phoneNumber.text);
     },
@@ -66,7 +66,7 @@ class _HomePageState extends State<HomePage> {
       IconData prefixIcons,
       BuildContext context) =>
       Padding(
-        padding: const EdgeInsets.all(10.00),
+        padding: EdgeInsets.all(10.00),
         child: SizedBox(
           width: MediaQuery.of(context).size.width / 1.5,
           child: TextFormField(
